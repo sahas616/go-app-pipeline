@@ -64,6 +64,28 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/go-web-app:${{github.run_id}}
 
+  update-tag-values-yaml:
+    runs-on: ubuntu-latest
+
+    needs: push-image
+    
+    steps:
+      - name: Checkout GitHub Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.TOKEN }}
+
+      - name: Update values.yaml file
+        run: 'sed -i "s/tag: [0-9]*/tag: ${{github.run_id}}/" k8s/manifests/go-web-app-helmchart/values.yaml'
+
+      - name: Commit updated values.yaml file
+        run: |
+          git config --global user.email "souvik@example.com"
+          git config --global user.name "Souvik Saha"
+          git add k8s/manifests/go-web-app-helmchart/values.yaml
+          git commit -m "Update tag in Helm chart"
+          git push
+
 
 
     
