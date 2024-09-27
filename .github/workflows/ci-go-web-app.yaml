@@ -5,7 +5,8 @@ on:
     branches:
       - main
     paths-ignore:
-      - 'values.yaml'
+      - '**/values.yaml'
+      - '**/README.md'
 
 jobs:
   build:
